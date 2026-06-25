@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atoms Digital Solutions - SLA Generator Chatbot</title>
+    <!-- Google Fonts: Inter and Playfair Display for legal headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Premium Header -->
+    <header class="app-header">
+        <div class="header-logo">
+            <span class="logo-accent">Atoms</span> Digital Solutions
+        </div>
+        <h1 class="header-title">SLA Generator Chatbot</h1>
+        <div class="header-status" id="db-connection-status">
+            <span class="status-dot disconnected"></span>
+            <span class="status-text">Connecting to database...</span>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- STATE 1: MODE SELECTION -->
+        <section id="state-mode-selection" class="workspace-card mode-select-card">
+            <h2>Create New SLA Document</h2>
+            <p class="subtitle">Choose how you want to collect client details and generate the contract.</p>
+            
+            <div class="mode-grid">
+                <button id="btn-select-guided" class="mode-card">
+                    <div class="mode-icon">🎙️</div>
+                    <h3>Guided Mode (Interview)</h3>
+                    <p>The assistant asks questions one-by-one to collect the exact data required for the SLA.</p>
+                </button>
+                
+                <button id="btn-select-quick" class="mode-card">
+                    <div class="mode-icon">⚡</div>
+                    <h3>Quick Mode (Parse Brief)</h3>
+                    <p>Paste a raw client brief, emails, or notes. The assistant parses the details and asks only for missing fields.</p>
+                </button>
+            </div>
+        </section>
+
+        <!-- STATE 3: GENERATING (Transition State) -->
+        <section id="state-generating" class="workspace-card loading-card hidden">
+            <div class="spinner-container">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+            <h2>Generating Legal SLA Contract</h2>
+            <p>Gemini is compiling the 27-section SLA document with the exact verbatim legal clauses...</p>
+        </section>
+
+        <!-- CORE WORKSPACE (States 2, 4, 5) -->
+        <!-- We toggle classes on this container: .layout-collecting (single-column) or .layout-review (3-columns) -->
+        <section id="workspace-layout" class="workspace-layout hidden">
+            
+            <!-- PANEL 1: CHAT PANEL (Left) -->
+            <div class="workspace-panel chat-panel" id="panel-chat">
+                <div class="panel-header">
+                    <h3>Chat Assistant</h3>
+                    <span id="active-mode-badge" class="badge">Guided Mode</span>
+                </div>
+                
+                <!-- Chat Message Log -->
+                <div id="chat-log" class="chat-log">
+                    <!-- Dynamic Messages go here -->
+                </div>
+                
+                <!-- Typing Indicator -->
+                <div id="typing-indicator" class="typing-indicator hidden">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <!-- Action Button for Generation -->
+                <div id="generation-action-bar" class="generation-action-bar hidden">
+                    <p>🎉 All required SLA information collected!</p>
+                    <button id="btn-generate-sla" class="btn btn-primary btn-pulse">Generate SLA Document</button>
+                </div>
+                
+                <!-- Chat Input Group -->
+                <div class="chat-input-group">
+                    <input type="text" id="chat-input" placeholder="Type a response here..." disabled>
+                    <button id="btn-send-message" class="btn btn-send" disabled>
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 2: DOCUMENT PANEL (Centre) -->
+            <div class="workspace-panel document-panel" id="panel-document">
+                <div class="panel-header">
+                    <h3>SLA Document</h3>
+                    <button id="btn-print-pdf" class="btn btn-secondary btn-sm">🖨️ Print / Save PDF</button>
+                </div>
+                <div class="document-view-wrapper">
+                    <!-- The document is rendered here -->
+                    <div id="document-view" class="document-view">
+                        <!-- Rendered SLA -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 3: EDIT HISTORY PANEL (Right) -->
+            <div class="workspace-panel history-panel" id="panel-history">
+                <div class="panel-header">
+                    <h3>Edit History</h3>
+                    <span id="badge-changes" class="badge">0 Changes</span>
+                </div>
+                <div class="history-log-wrapper">
+                    <div id="history-log" class="history-log">
+                        <p class="empty-history-text">No changes recorded in this session yet.</p>
+                    </div>
+                </div>
+                <div class="supabase-status" id="supabase-sync-status">
+                    Status: Connecting to Supabase...
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
