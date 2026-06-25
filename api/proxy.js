@@ -1,4 +1,5 @@
-export default async function handler(req, res) {
+// Vercel Serverless Function using CommonJS syntax for compatibility
+module.exports = async function handler(req, res) {
   // Inject CORS headers to allow connection from the frontend
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -72,4 +73,4 @@ export default async function handler(req, res) {
     console.error("Proxy Error:", error);
     return res.status(500).json({ error: "Proxy Server Error: " + error.message });
   }
-}
+};

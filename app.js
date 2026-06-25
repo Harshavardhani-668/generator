@@ -290,6 +290,10 @@ async function initSupabase() {
         if (!res.ok) throw new Error("Failed to load backend config.");
         const config = await res.json();
         
+        if (!config.supabaseUrl || !config.supabaseAnonKey) {
+            throw new Error("Supabase environment variables missing. Please configure them in Vercel settings.");
+        }
+        
         if (window.supabase && typeof window.supabase.createClient === 'function') {
             supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
             console.log("Supabase Client initialized successfully.");

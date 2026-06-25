@@ -1,5 +1,6 @@
-export default function handler(req, res) {
-  // Inject CORS headers to allow connection from the frontend
+// Vercel Serverless Function using CommonJS syntax for compatibility
+module.exports = function handler(req, res) {
+  // Inject CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -17,4 +18,4 @@ export default function handler(req, res) {
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseAnonKey: process.env.SUPABASE_ANON_KEY
   });
-}
+};
