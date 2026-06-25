@@ -53,6 +53,13 @@ body {
     overflow: hidden;
 }
 
+/* Typography inheritance for form elements */
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
 /* =========================================================================
    3. APP HEADER
    ========================================================================= */
@@ -292,6 +299,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    min-height: 0; /* Critical fix for grid height constraints in browsers */
 }
 
 .panel-header {
@@ -410,7 +418,6 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     outline: none;
-    font-family: inherit;
     font-size: 13.5px;
     transition: all 0.2s;
 }
@@ -503,7 +510,8 @@ body {
     overflow-y: auto;
     padding: 40px 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center; /* Horizontally center content cleanly without vertical center clipping */
 }
 
 .document-view {
@@ -700,7 +708,59 @@ body {
 }
 
 /* =========================================================================
-   10. PRINT MEDIA QUERY (Word-like Printable PDF Formatting)
+   10. MOBILE & TABLET RESPONSIVENESS
+   ========================================================================= */
+@media (max-width: 1024px) {
+    /* Stack three columns on tablet and small screens */
+    .workspace-layout.layout-review {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow-y: auto;
+    }
+    
+    body {
+        overflow-y: auto;
+        height: auto;
+    }
+    
+    .workspace-panel {
+        height: 600px;
+        min-height: auto;
+    }
+    
+    .app-container {
+        padding: 15px;
+        overflow-y: auto;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .mode-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .workspace-card {
+        padding: 20px;
+    }
+    
+    .document-view {
+        padding: 30px 40px;
+    }
+    
+    .sig-matrix {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .sig-block {
+        width: 100%;
+    }
+}
+
+/* =========================================================================
+   11. PRINT MEDIA QUERY (Word-like Printable PDF Formatting)
    ========================================================================= */
 @media print {
     body {
